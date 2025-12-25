@@ -30,8 +30,13 @@ pipeline {
             steps {
                 sh '''
                     test -f build/index.html && echo "Build exists" || echo "Build missing"
-                    npm test || echo "Tests failed"
+                    npm test || true
                 '''
+            }
+            post {
+                always {
+                    junit 'junit.xml'
+                }
             }
         }
 
