@@ -54,7 +54,7 @@ pipeline {
                     npm install -g netlify-cli
                     netlify --version
                     echo "Deploy step ready for Site ID: $NETLIFY_SITE_ID"
-                    netlify deploy --dir=build --prod
+                    netlify deploy --prod --dir=build --no-build
                     
                 '''
             }
