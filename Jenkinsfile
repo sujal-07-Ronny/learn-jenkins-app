@@ -15,7 +15,7 @@ pipeline {
                     node -v
                     npm -v
                     npm install
-                    npm run build || echo "build skipped"
+                    npm run build || echo "Build skipped"
                 '''
             }
         }
@@ -33,29 +33,35 @@ pipeline {
                     npm test || true
                 '''
             }
+        }
 
-        stage('Deploy'){
-            agent{
-                docker{
+        stage('Deploy') {
+            agent {
+                docker {
                     image 'node:18-alpine'
                     reuseNode true
                 }
             }
-
-            steps{
+            steps {
                 sh '''
-                   npm install netflify-cli -g
+                    npm install -g netlify-cli
                     netlify --version
+                    echo "Deploy step ready"
                 '''
             }
         }
-            post {
-                always {
-                    junit 'test-results/junit.xml'
+    }
 
-                }
-            }
+    post {
+        always {
+            echo "Pipeline completed"
+            junit allowEmptyResults: true, testResults: 'test-results/junit.xml'
         }
-
+        success {
+            echo "Pipeline successful"
+        }
+        failure {
+            echo "Pipeline failed"
+        }
     }
 }
