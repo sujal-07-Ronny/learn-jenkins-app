@@ -33,6 +33,22 @@ pipeline {
                     npm test || true
                 '''
             }
+
+        stage('Deploy'){
+            agent{
+                docker{
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+
+            steps{
+                sh '''
+                   npm install netflify-cli -g
+                    netlify --version
+                '''
+            }
+        }
             post {
                 always {
                     junit 'test-results/junit.xml'
